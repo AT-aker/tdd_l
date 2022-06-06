@@ -17,7 +17,7 @@ class HomePageTest(TestCase):
 
     def test_home_page_returns_correct_html(self):
         '''test: home page returns correct html page'''
-        request = HttpRequest()
+        request = HttpRequest() 
         response = home_page(request)
         html = response.content.decode('utf8')
         self.assertTrue(html.startswith('<html>'))
