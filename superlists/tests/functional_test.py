@@ -6,9 +6,9 @@ import unittest
 ''' We have some user who need to input the value into check box
  and this value add to list 'To-Do'
  this user input "clean the floor"
- and he get "1. Clean the floor"
- user input second value and take two values in list
- and his list stored in new Url - site messeged him about'''
+ and he get "1: Clean the floor"
+ user input second value "cooked dinner" and take two values in list.
+ second "2: Cooked dinner" and his list stored in new Url - site messeged him about'''
 
 
 class NewVisitorTest(unittest.TestCase):
@@ -44,16 +44,34 @@ class NewVisitorTest(unittest.TestCase):
         inputbox.send_keys('clean the floor')
 
         # when user press Enter, the page is being refreshed, and
-        # the page consist '1: Clean the floor' in lists item
+        # the page consist '1: clean the floor' in lists item
         inputbox.send_keys(Keys.ENTER)
         time.sleep(1)
 
         table = self.browser.find_element_by_id('id_list_table')
         rows = table.find_elements_by_tag_name('tr')
-        self.assertTrue(
-            any(row.text == '1.Clean the floor' for row in rows),
-            "New element not consist in table"
-        )
+        # self.assertTrue(
+        #     any(row.text == '1:clean the floor' for row in rows),
+        #     f"New element not consist in table. The content was: \n{table.text}"
+        # )
+        self.assertIn('1: clean the floor', [row.text for row in rows])
+
+        # browser proposes input next value 
+        # user input "cooked dinner" 
+        inputbox = self.browser.find_element_by_id('id_new_item')
+        inputbox.send_keys('cooked dinner')
+        inputbox.send_keys(Keys.ENTER)
+        time.sleep(1)
+
+        # the page refreshes and shows both items in its list
+        table = self.browser.find_element_by_id('id_list_table')
+        rows = table.find_element_by_tag_name('tr')
+        self.assertIn('1: clean the floor', [row.text for row in rows])
+        self.assertIn('2: cooked dinner', [row.text for row in rows])
+
+        # list stored in new Url - site messeged him about
+
+        
         self.fail('Test finally done!')
         
 if __name__ == '__main__':
