@@ -22,6 +22,12 @@ class NewVisitorTest(unittest.TestCase):
         '''quit'''
         self.browser.quit()
 
+    def check_for_row_in_list_table(self,row_text):
+        """validating a row in a list table"""
+        table = self.browser.find_element_by_id('id_list_table')
+        rows = table.find_elements_by_tag_name('tr')
+        self.assertIn(row_text, [row.text for row in rows])
+
     def test_can_start_a_list_and_reteieve_it_later(self):
         '''Test: we can start the list and give up this list later'''
         # evaluation of the application at
@@ -47,6 +53,7 @@ class NewVisitorTest(unittest.TestCase):
         # the page consist '1: clean the floor' in lists item
         inputbox.send_keys(Keys.ENTER)
         time.sleep(1)
+        self.check_for_row_in_list_table('1: clean the floor')
 
         table = self.browser.find_element_by_id('id_list_table')
         rows = table.find_elements_by_tag_name('tr')
@@ -64,10 +71,8 @@ class NewVisitorTest(unittest.TestCase):
         time.sleep(1)
 
         # the page refreshes and shows both items in its list
-        table = self.browser.find_element_by_id('id_list_table')
-        rows = table.find_element_by_tag_name('tr')
-        self.assertIn('1: clean the floor', [row.text for row in rows])
-        self.assertIn('2: cooked dinner', [row.text for row in rows])
+        self.check_for_row_in_list_table('1: clean the floor')
+        self.check_for_row_in_list_table('2: cooked dinner')
 
         # list stored in new Url - site messeged him about
 
