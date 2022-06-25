@@ -1,7 +1,8 @@
+from django.test import LiveServerTestCase
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import time
-import unittest
+
 
 ''' We have some user who need to input the value into check box
  and this value add to list 'To-Do'
@@ -11,7 +12,7 @@ import unittest
  second "2: Cooked dinner" and his list stored in new Url - site messeged him about'''
 
 
-class NewVisitorTest(unittest.TestCase):
+class NewVisitorTest(LiveServerTestCase):
     """test new user"""
 
     def setUp(self) -> None:
@@ -32,7 +33,7 @@ class NewVisitorTest(unittest.TestCase):
         '''Test: we can start the list and give up this list later'''
         # evaluation of the application at
         #  the address of its website
-        self.browser.get('http://localhost:8000')
+        self.browser.get(self.live_server_url)
 
         # Check 'to-do' in title main page 
         self.assertIn('To-Do', self.browser.title)
@@ -79,5 +80,5 @@ class NewVisitorTest(unittest.TestCase):
         
         self.fail('Test finally done!')
         
-if __name__ == '__main__':
-    unittest.main(warnings='ignore')
+# if __name__ == '__main__':
+#     unittest.main(warnings='ignore')
