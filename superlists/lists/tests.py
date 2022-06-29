@@ -27,22 +27,12 @@ class HomePageTest(TestCase):
             '/', data={'item_text': 'A new list item'}
             )
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response['location'], '/')
+        self.assertEqual(response['location'], '/lists/only-world-list-ever/')
     
     def test_only_saves_items_when_necessary(self):
         '''test: save elements only when this need'''
         self.client.get('/')
         self.assertEqual(Item.objects.count(), 0)
-    
-    def test_displays_all_list_items(self):
-        '''test: views all elements of list'''
-        Item.objects.create(text='itemey 1')
-        Item.objects.create(text='itemey 2')
-
-        response = self.client.get('/')
-
-        self.assertIn('itemey 1', response.content.decode())
-        self.assertIn('itemey 2', response.content.decode())
 
 
 class ItemModelTest(TestCase):
@@ -65,3 +55,21 @@ class ItemModelTest(TestCase):
         second_saved_item = saved_items[1]
         self.assertEqual(first_saved_item.text, "The first (ever) list item")
         self.assertEqual(second_saved_item.text, 'Item the second')
+
+class ListViewTest(TestCase):
+    '''Test list view'''
+
+    def test_uses_list_template(self):
+        '''test: uses list template'''
+        response = self.client.get('/lists/only-world-list-ever/')
+        self.assertTemplateUsed(response, 'list.html')
+
+    def test_displays_all_items(self):
+        '''test: views all elements of list'''
+        Item.objects.create(text='itemey 1')
+        Item.objects.create(text='itemey 2')
+
+        response = self.client.get('/lists/only-world-list-ever/')
+
+        self.assertContains(response, 'itemey 1')
+        self.assertContains(response, 'itemey 2')
