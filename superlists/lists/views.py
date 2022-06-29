@@ -1,10 +1,7 @@
 from django.shortcuts import redirect, render
-from lists.models import Item
+from lists.models import Item, List
 
 
-
-
-# Create your views here.
 def home_page(request):
     '''Create home page in app views '''
     return render(request, 'home.html')
@@ -16,5 +13,6 @@ def view_list(request):
 
 def new_list(request):
     '''new list'''
-    Item.objects.create(text=request.POST['item_text'])
+    list_ = List.objects.create()
+    Item.objects.create(text=request.POST['item_text'], list=list_)
     return redirect('/lists/only-world-list-ever/')
